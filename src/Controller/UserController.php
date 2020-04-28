@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
@@ -20,9 +19,9 @@ class UserController extends AbstractController
 {
 
     /**
-     * @Route("/api/user", name="api_user_get", methods={"GET"})
+     * @Route("/api/user", name="api_users_get", methods={"GET"})
      */
-    public function get_user(UserRepository $userRepository)
+    public function get_users(UserRepository $userRepository)
     {
         $users = $userRepository->findAll();
         
@@ -36,33 +35,28 @@ class UserController extends AbstractController
         Request $request,
         JWTTokenManagerInterface $jwtTokenManager,
         SerializerInterface $serializer
-    )
-    {
+    ) {
         $user_request = $request->getContent();
         $user_serialized = $serializer->deserialize($user_request, User::class, 'json');
-        $name = $user_serialized->getUserName();
+        $email = $user_serialized->getEmail();
         $password = $user_serialized->getPassword();
-
-        // $users = $userRepository->findAll();
         
-        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(["username" => $name, "password" => $password]);
-        if (!$user instanceof User) {
+        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(["email" => $email, "password" => $password]);
 
-            throw new NotFoundHttpException("Le nom de compte ou le mot de passe est incorrecte");
+        if (!$user instanceof User) {
+            return $this->json([
+                'status' => 404,
+                'message' => "Le nom de compte ou le mot de passe est incorrect"
+            ], 404);
         }
 
         $token = $jwtTokenManager->create($user);
 
-        // dd($name, $password, $user);
-
         return new JsonResponse([ "token" => 'Bearer '.$token]);
-        
-        // ]);
-        // return $this->json($users, 200, [], ['groups' => 'user-get-list']);
     }
 
     /**
-     * @Route("/api/user/register", name="api_user_create", methods={"POST"})
+     * @Route("/api/user/create", name="api_user_create", methods={"POST"})
      */
     public function create_user(Request $request, SerializerInterface $serializer, EntityManagerInterface $emi, ValidatorInterface $validator)
     {
@@ -73,10 +67,23 @@ class UserController extends AbstractController
 
             $user->setCreatedAt(new DateTime());
 
+            $userEmail = $user->getEmail();
+
+            $userfind = $this->getDoctrine()->getRepository(User::class)->findOneBy(["email" => $userEmail ]);
+
+            if ($userfind instanceof User) {
+                return $this->json([
+                    'status' => 409,
+                    'message' => "Un compte est déja associé à cette email : $userEmail"
+                ], 409);
+            }
             $errors = $validator->validate($user);
 
             if (count($errors) > 0) {
-                return $this->json($errors, 400);
+                return $this->json([
+                    'status' => 400,
+                    'message' => "L'email à déjà été utilisé"
+                    ], 400);
             }
 
             $emi->persist($user);
