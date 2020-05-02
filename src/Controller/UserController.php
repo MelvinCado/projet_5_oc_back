@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends AbstractController
 {
@@ -34,22 +35,24 @@ class UserController extends AbstractController
     public function login_user(
         Request $request,
         JWTTokenManagerInterface $jwtTokenManager,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        UserPasswordEncoderInterface $encoder
     ) {
         $user_request = $request->getContent();
-        $user_serialized = $serializer->deserialize($user_request, User::class, 'json');
-        $email = $user_serialized->getEmail();
-        $password = $user_serialized->getPassword();
-        
-        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(["email" => $email, "password" => $password]);
+        $user_deserialized = $serializer->deserialize($user_request, User::class, 'json');
+        $email = $user_deserialized->getEmail();
+        $password = $user_deserialized->getPassword();
 
-        if (!$user instanceof User) {
+        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(["email" => $email]);
+
+        $validation = $encoder->isPasswordValid($user, $password);
+
+        if (!$validation) {
             return $this->json([
                 'status' => 404,
-                'message' => "Le nom de compte ou le mot de passe est incorrect"
+                'message' => "L'email ou le mot de passe est incorrect"
             ], 404);
         }
-
         $token = $jwtTokenManager->create($user);
 
         return new JsonResponse([ "token" => 'Bearer '.$token]);
@@ -58,17 +61,19 @@ class UserController extends AbstractController
     /**
      * @Route("/api/user/create", name="api_user_create", methods={"POST"})
      */
-    public function create_user(Request $request, SerializerInterface $serializer, EntityManagerInterface $emi, ValidatorInterface $validator)
-    {
+    public function create_user(
+        Request $request,
+        SerializerInterface $serializer,
+        EntityManagerInterface $emi,
+        ValidatorInterface $validator,
+        UserPasswordEncoderInterface $encoder
+    ) {
         $request_json = $request->getContent();
 
         try {
             $user = $serializer->deserialize($request_json, User::class, 'json');
-
-            $user->setCreatedAt(new DateTime());
-
+            
             $userEmail = $user->getEmail();
-
             $userfind = $this->getDoctrine()->getRepository(User::class)->findOneBy(["email" => $userEmail ]);
 
             if ($userfind instanceof User) {
@@ -77,14 +82,11 @@ class UserController extends AbstractController
                     'message' => "Un compte est déja associé à cette email : $userEmail"
                 ], 409);
             }
-            $errors = $validator->validate($user);
 
-            if (count($errors) > 0) {
-                return $this->json([
-                    'status' => 400,
-                    'message' => "L'email à déjà été utilisé"
-                    ], 400);
-            }
+            $user->setCreatedAt(new DateTime());
+
+            $hash = $encoder->encodePassword($user, $user->getPassword());
+            $user->setPassword($hash);
 
             $emi->persist($user);
             $emi->flush();
