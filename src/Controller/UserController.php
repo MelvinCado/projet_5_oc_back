@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
@@ -53,8 +52,8 @@ class UserController extends AbstractController
                 'message' => "L'email ou le mot de passe est incorrect"
             ], 404);
         }
+       
         $token = $jwtTokenManager->create($user);
-
         return new JsonResponse([ "token" => 'Bearer '.$token]);
     }
 
@@ -65,7 +64,6 @@ class UserController extends AbstractController
         Request $request,
         SerializerInterface $serializer,
         EntityManagerInterface $emi,
-        ValidatorInterface $validator,
         UserPasswordEncoderInterface $encoder
     ) {
         $request_json = $request->getContent();
