@@ -3,6 +3,9 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -14,34 +17,50 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"budgetCard-create"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"budgetCard-create"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
+     * @Groups({"budgetCard-create"})
      */
     private $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Groups({"budgetCard-create"})
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"budgetCard-create"})
      */
     private $username;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"budgetCard-create"})
      */
     private $created_at;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\BudgetCard", mappedBy="user")
+     */
+    private $budgetCards;
+
+    public function __construct()
+    {
+        $this->budgetCards = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -136,6 +155,37 @@ class User implements UserInterface
     public function setCreatedAt(\DateTimeInterface $created_at): self
     {
         $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BudgetCard[]
+     */
+    public function getBudgetCards(): Collection
+    {
+        return $this->budgetCards;
+    }
+
+    public function addBudgetCard(BudgetCard $budgetCard): self
+    {
+        if (!$this->budgetCards->contains($budgetCard)) {
+            $this->budgetCards[] = $budgetCard;
+            $budgetCard->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBudgetCard(BudgetCard $budgetCard): self
+    {
+        if ($this->budgetCards->contains($budgetCard)) {
+            $this->budgetCards->removeElement($budgetCard);
+            // set the owning side to null (unless already changed)
+            if ($budgetCard->getUser() === $this) {
+                $budgetCard->setUser(null);
+            }
+        }
 
         return $this;
     }
