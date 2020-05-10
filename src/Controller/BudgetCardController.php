@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\BudgetCard;
 use App\Entity\User;
 use App\Repository\BudgetCardRepository;
+use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,8 +15,18 @@ use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 
 class BudgetCardController extends AbstractController
 {
+
     /**
-     * @Route("/api/budget-card/create", name="budget_card_create", methods={"POST"})
+     * @Route("/api/budget-card-by-userId/{userId}", name="api_get-list_budget_card", methods={"GET"})
+     */
+    public function get_budgetCard_by_user(int $userId)
+    {
+        $user = $this->getDoctrine()->getRepository(User::class)->findBy(["id" => $userId]);
+        return $this->json($user, 200, [], ['groups' => 'budget-card-get-list']);
+    }
+
+    /**
+     * @Route("/api/budget-card/create", name="api_budget_card_create", methods={"POST"})
      */
     public function createBudgetCard(Request $request, EntityManagerInterface $emi)
     {
@@ -43,7 +54,7 @@ class BudgetCardController extends AbstractController
             $emi->persist($budgetCardToCreate);
             $emi->flush();
 
-            return $this->json($budgetCardToCreate, 201, [], ["groups" => "budgetCard-create"]);
+            return $this->json($budgetCardToCreate, 201, [], ["groups" => "budget-card-create"]);
         } catch (NotEncodableValueException $e) {
             return $this->json([
                 'status' => 400,

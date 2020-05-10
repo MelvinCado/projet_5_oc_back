@@ -17,43 +17,44 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"budgetCard-create"})
+     * @Groups({"budget-card-create"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"budgetCard-create"})
+     * @Groups({"budget-card-create"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
-     * @Groups({"budgetCard-create"})
+     * @Groups({"budget-card-create"})
      */
     private $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Groups({"budgetCard-create"})
+     * @Groups({"budget-card-create"})
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"budgetCard-create"})
+     * @Groups({"budget-card-create", "budget-card-get-list"})
      */
     private $username;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"budgetCard-create"})
+     * @Groups({"budget-card-create"})
      */
     private $created_at;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\BudgetCard", mappedBy="user")
+     * @Groups({"budget-card-get-list"})
      */
     private $budgetCards;
 

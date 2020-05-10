@@ -16,42 +16,43 @@ class BudgetCard
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"budget-card-get-list"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"budgetCard-create"})
+     * @Groups({"budget-card-create", "budget-card-get-list"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"budgetCard-create"})
+     * @Groups({"budget-card-create", "budget-card-get-list"})
      */
     private $ceil;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"budgetCard-create"})
+     * @Groups({"budget-card-create", "budget-card-get-list"})
      */
     private $limitDate;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"budgetCard-create"})
+     * @Groups({"budget-card-create", "budget-card-get-list"})
      */
     private $currentMoney;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"budgetCard-create"})
+     * @Groups({"budget-card-create"})
      */
     private $createdAt;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="budgetCards", cascade={"persist"})
-     * @Groups({"budgetCard-create"})
+     * @Groups({"budget-card-create"})
      */
     private $user;
 
