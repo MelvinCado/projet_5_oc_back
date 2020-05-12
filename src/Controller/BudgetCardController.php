@@ -4,8 +4,6 @@ namespace App\Controller;
 
 use App\Entity\BudgetCard;
 use App\Entity\User;
-use App\Repository\BudgetCardRepository;
-use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -31,7 +29,6 @@ class BudgetCardController extends AbstractController
     public function createBudgetCard(Request $request, EntityManagerInterface $emi)
     {
         $req = json_decode($request->getContent(), true);
-
 
         $title = $req['title'];
         $ceil = $req['ceil'];
