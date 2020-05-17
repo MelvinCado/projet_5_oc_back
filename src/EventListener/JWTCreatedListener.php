@@ -30,7 +30,7 @@ final class JWTCreatedListener
     {
         $payload = $event->getData();
         $authUser = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $payload['email']]);
-        $payload['email'] = $authUser->getEmail();
+        $payload['username'] = $authUser->getUsername();
         $payload['id'] = $authUser->getId();
         
         $event->setData($payload);

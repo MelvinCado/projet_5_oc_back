@@ -59,4 +59,26 @@ class BudgetCardController extends AbstractController
             ], 400);
         }
     }
+
+    /**
+     * @Route("/api/budget-card/{id}", name="api_budget_card_delete", methods={"DELETE"})
+     */
+    public function deleteBudgetCard(int $id, EntityManagerInterface $emi)
+    {
+      
+
+        try {
+            $budgetCard = $this->getDoctrine()->getRepository(BudgetCard::class)->findBy(["id" => $id]);
+
+            $emi->remove($budgetCard[0]);
+            $emi->flush();
+
+            return $this->json($budgetCard[0], 204);
+        } catch (NotEncodableValueException $e) {
+            return $this->json([
+                'status' => 400,
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
 }

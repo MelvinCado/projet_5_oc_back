@@ -53,7 +53,7 @@ class User implements UserInterface
     private $created_at;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\BudgetCard", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\BudgetCard", mappedBy="user", orphanRemoval=true)
      * @Groups({"budget-card-get-list"})
      */
     private $budgetCards;

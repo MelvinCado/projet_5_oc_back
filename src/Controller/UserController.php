@@ -8,11 +8,9 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends AbstractController
@@ -25,35 +23,6 @@ class UserController extends AbstractController
     {
         return $this->json($userRepository->findAll(), 200, [], ['groups' => 'user-get-list']);
     }
-
-    // /**
-    //  * @Route("/api/user/login", name="api_user_login", methods={"POST"})
-    //  */
-    // public function login_user(
-    //     Request $request,
-    //     JWTTokenManagerInterface $jwtTokenManager,
-    //     SerializerInterface $serializer,
-    //     UserPasswordEncoderInterface $encoder
-    // ) {
-    //     $user_request = $request->getContent();
-    //     $user_deserialized = $serializer->deserialize($user_request, User::class, 'json');
-    //     $email = $user_deserialized->getEmail();
-    //     $password = $user_deserialized->getPassword();
-
-    //     $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(["email" => $email]);
-
-    //     $validation = $encoder->isPasswordValid($user, $password);
-
-    //     if (!$validation) {
-    //         return $this->json([
-    //             'status' => 404,
-    //             'message' => "L'email ou le mot de passe est incorrect"
-    //         ], 404);
-    //     }
-       
-    //     $token = $jwtTokenManager->create($user);
-    //     return new JsonResponse([ "token" => 'Bearer '.$token]);
-    // }
 
     /**
      * @Route("/api/user/create", name="api_user_create", methods={"POST"})
