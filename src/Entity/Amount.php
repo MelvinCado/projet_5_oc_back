@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -30,6 +32,16 @@ class Amount
      */
     private $user;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Deal", mappedBy="amount", orphanRemoval=true)
+     */
+    private $deals;
+
+    public function __construct()
+    {
+        $this->deals = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -55,6 +67,37 @@ class Amount
     public function setUser(user $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Deal[]
+     */
+    public function getDeals(): Collection
+    {
+        return $this->deals;
+    }
+
+    public function addDeal(Deal $deal): self
+    {
+        if (!$this->deals->contains($deal)) {
+            $this->deals[] = $deal;
+            $deal->setAmount($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDeal(Deal $deal): self
+    {
+        if ($this->deals->contains($deal)) {
+            $this->deals->removeElement($deal);
+            // set the owning side to null (unless already changed)
+            if ($deal->getAmount() === $this) {
+                $deal->setAmount(null);
+            }
+        }
 
         return $this;
     }

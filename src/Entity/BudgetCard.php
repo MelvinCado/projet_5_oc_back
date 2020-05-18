@@ -56,9 +56,15 @@ class BudgetCard
      */
     private $user;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Deal", mappedBy="budgetCard", orphanRemoval=true)
+     */
+    private $deals;
+
     public function __construct()
     {
         $this->user = new ArrayCollection();
+        $this->deals = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -160,6 +166,37 @@ class BudgetCard
     public function setCurrentMoney(int $currentMoney): self
     {
         $this->currentMoney = $currentMoney;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Deal[]
+     */
+    public function getDeals(): Collection
+    {
+        return $this->deals;
+    }
+
+    public function addDeal(Deal $deal): self
+    {
+        if (!$this->deals->contains($deal)) {
+            $this->deals[] = $deal;
+            $deal->setBudgetCard($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDeal(Deal $deal): self
+    {
+        if ($this->deals->contains($deal)) {
+            $this->deals->removeElement($deal);
+            // set the owning side to null (unless already changed)
+            if ($deal->getBudgetCard() === $this) {
+                $deal->setBudgetCard(null);
+            }
+        }
 
         return $this;
     }
