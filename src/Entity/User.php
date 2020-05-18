@@ -29,7 +29,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="json")
-     * @Groups({"budget-card-create"})
+     * @Groups({"budget-card-create", "user-get-list"})
      */
     private $roles = [];
 
@@ -42,24 +42,25 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"budget-card-create", "budget-card-get-list"})
+     * @Groups({"budget-card-create", "budget-card-get-list", "user-get-list"})
      */
     private $username;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"budget-card-create"})
+     * @Groups({"budget-card-create", "user-get-list"})
      */
     private $created_at;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\BudgetCard", mappedBy="user", orphanRemoval=true)
-     * @Groups({"budget-card-get-list"})
+     * @Groups({"budget-card-get-list", "user-get-list"})
      */
     private $budgetCards;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Amount", inversedBy="user", cascade={"persist", "remove"})
+     * @Groups({"user-get-list", "amount-get-one"})
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $amount;

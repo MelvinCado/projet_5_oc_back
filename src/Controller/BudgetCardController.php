@@ -15,7 +15,7 @@ class BudgetCardController extends AbstractController
 {
 
     /**
-     * @Route("/api/budget-card-by-userId/{userId}", name="api_get-list_budget_card", methods={"GET"})
+     * @Route("/api/budget-card-by-userId/{userId}", name="api_get_list_budget_card", methods={"GET"})
      */
     public function get_budgetCard_by_user(int $userId)
     {

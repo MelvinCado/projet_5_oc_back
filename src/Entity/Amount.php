@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AmountRepository")
@@ -13,17 +14,19 @@ class Amount
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"amount-get-one"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"amount-get-one"})
      */
     private $money;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\User", mappedBy="amount", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")     
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $user;
 
