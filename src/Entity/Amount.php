@@ -23,7 +23,7 @@ class Amount
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\User", mappedBy="amount", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")     
      */
     private $user;
 

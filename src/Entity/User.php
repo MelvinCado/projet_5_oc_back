@@ -60,6 +60,7 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Amount", inversedBy="user", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $amount;
 

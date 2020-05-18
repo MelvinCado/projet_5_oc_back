@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Amount;
 use DateTime;
 use App\Entity\User;
 use App\Repository\UserRepository;
@@ -53,9 +54,14 @@ class UserController extends AbstractController
             $hash = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($hash);
 
+            $newAmount = new Amount();
+            $newAmount->setMoney(0);
+            $user->setAmount($newAmount);
+
+            $emi->persist($newAmount);
             $emi->persist($user);
             $emi->flush();
-
+            
             return $this->json($user, 201, [], ['groups' => 'user-get-list']);
         } catch (NotEncodableValueException $e) {
             return $this->json([
