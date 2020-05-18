@@ -58,6 +58,11 @@ class User implements UserInterface
      */
     private $budgetCards;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Amount", inversedBy="user", cascade={"persist", "remove"})
+     */
+    private $amount;
+
     public function __construct()
     {
         $this->budgetCards = new ArrayCollection();
@@ -186,6 +191,23 @@ class User implements UserInterface
             if ($budgetCard->getUser() === $this) {
                 $budgetCard->setUser(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function getAmount(): ?Amount
+    {
+        return $this->amount;
+    }
+
+    public function setAmount(Amount $amount): self
+    {
+        $this->amount = $amount;
+
+        // set the owning side of the relation if necessary
+        if ($amount->getUser() !== $this) {
+            $amount->setUser($this);
         }
 
         return $this;
