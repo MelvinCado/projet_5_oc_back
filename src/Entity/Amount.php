@@ -16,13 +16,13 @@ class Amount
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"amount-get-one"})
+     * @Groups({"amount-get-one","deal-create"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"amount-get-one"})
+     * @Groups({"amount-get-one","deal-create"})
      */
     private $money;
 

@@ -16,19 +16,19 @@ class BudgetCard
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"budget-card-get-list"})
+     * @Groups({"budget-card-get-list", "deal-create"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"budget-card-create", "budget-card-get-list"})
+     * @Groups({"budget-card-create", "budget-card-get-list","deal-create"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"budget-card-create", "budget-card-get-list"})
+     * @Groups({"budget-card-create", "budget-card-get-list","deal-create"})
      */
     private $ceil;
 
@@ -40,7 +40,7 @@ class BudgetCard
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"budget-card-create", "budget-card-get-list"})
+     * @Groups({"budget-card-create", "budget-card-get-list","deal-create"})
      */
     private $currentMoney;
 
