@@ -37,11 +37,11 @@ class DealController extends AbstractController
             $newDeal->setBudgetCard($budgetCard);
 
             if ($type === Deal::AMOUNT_TO_BUDGETCARD) {
-                $amount->setMoney(-$money);
-                $budgetCard->setCurrentMoney($money);
+                $amount->setMoney( $amount->getMoney() - $money);
+                $budgetCard->setCurrentMoney( $budgetCard->getCurrentMoney() + $money);
             } else {
-                $amount->setMoney($money);
-                $budgetCard->setCurrentMoney(-$money);
+                $amount->setMoney($amount->getMoney() + $money);
+                $budgetCard->setCurrentMoney($budgetCard->getCurrentMoney() - $money);
             }
 
             $emi->persist($amount);

@@ -12,6 +12,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class Amount
 {
+
+    const ADD_MONEY = 0;
+    const REMOVE_MONEY = 1;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

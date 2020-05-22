@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Amount;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,23 +18,29 @@ class AmountController extends AbstractController
      */
     public function get_amount_by_user(int $userId)
     {
-        $user = $this->getDoctrine()->getRepository(User::class)->findBy(["id" => $userId]);
+        $user = $this->getDoctrine()->getRepository(User::class)->findBy(["id" => $userId])[0];
         return $this->json($user, 200, [], ['groups' => 'amount-get-one']);
     }
 
     /**
      * @Route("/api/amount/by-user/{userId}", name="api_amount_edit", methods={"PATCH"})
      */
-    public function editBudgetCard(int $userId, Request $request, EntityManagerInterface $emi)
+    public function editAmount(int $userId, Request $request, EntityManagerInterface $emi)
     {
         $req = json_decode($request->getContent(), true);
         
         $money = $req['money'];
+        $type = $req['type'];
         
         try {
             $user = $this->getDoctrine()->getRepository(User::class)->findBy(["id" => $userId])[0];
             $amount = $user->getAmount();
-            $amount->setMoney( $amount->getMoney() + $money);
+
+            if ($type === Amount::ADD_MONEY) {
+                $amount->setMoney($amount->getMoney() + $money);
+            } elseif ($type === Amount::REMOVE_MONEY) {
+                $amount->setMoney($amount->getMoney() - $money);
+            }
             
             $emi->persist($amount);
             $emi->flush();
