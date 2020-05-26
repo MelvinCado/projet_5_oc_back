@@ -77,18 +77,18 @@ class BudgetCardController extends AbstractController
             $budgetCardToEdit = $this->getDoctrine()->getRepository(BudgetCard::class)->findBy(["id" => $id]);
             $budgetCardToEdit = $budgetCardToEdit[0];
 
-            $user = $this->getDoctrine()->getRepository(User::class)->findBy(["id" => $userId]);
+            $user = $this->getDoctrine()->getRepository(User::class)->findBy(["id" => $userId])[0];
             $budgetCardToEdit->setTitle($title);
             $budgetCardToEdit->setCeil($ceil);
             $budgetCardToEdit->setLimitDate(new DateTime($limitDate));
             $budgetCardToEdit->setCurrentMoney($currentMoney);
-            $budgetCardToEdit->setUser($user[0]);
+            $budgetCardToEdit->setUser($user);
             $budgetCardToEdit->setCreatedAt(new DateTime());
 
             $emi->persist($budgetCardToEdit);
             $emi->flush();
 
-            return $this->json($budgetCardToEdit, 201, [], ["groups" => "budget-card-create"]);
+            return $this->json($budgetCardToEdit, 200, [], ["groups" => "budget-card-create"]);
         } catch (NotEncodableValueException $e) {
             return $this->json([
                 'status' => 400,
@@ -108,7 +108,7 @@ class BudgetCardController extends AbstractController
             $emi->remove($budgetCard[0]);
             $emi->flush();
 
-            return $this->json($budgetCard[0], 204, [], ["groups" => "budget-card-create"] );
+            return $this->json($budgetCard[0], 204, [], ["groups" => "budget-card-create"]);
         } catch (NotEncodableValueException $e) {
             return $this->json([
                 'status' => 400,

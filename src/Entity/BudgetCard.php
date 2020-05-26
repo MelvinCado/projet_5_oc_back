@@ -61,10 +61,16 @@ class BudgetCard
      */
     private $deals;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\BudgetCardsFavorite", mappedBy="budgetCard")
+     */
+    private $UsersFavorite;
+
     public function __construct()
     {
         $this->user = new ArrayCollection();
         $this->deals = new ArrayCollection();
+        $this->UsersFavorite = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -195,6 +201,37 @@ class BudgetCard
             // set the owning side to null (unless already changed)
             if ($deal->getBudgetCard() === $this) {
                 $deal->setBudgetCard(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BudgetCardsFavorite[]
+     */
+    public function getUsersFavorite(): Collection
+    {
+        return $this->UsersFavorite;
+    }
+
+    public function addUsersFavorite(BudgetCardsFavorite $usersFavorite): self
+    {
+        if (!$this->UsersFavorite->contains($usersFavorite)) {
+            $this->UsersFavorite[] = $usersFavorite;
+            $usersFavorite->setBudgetCard($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUsersFavorite(BudgetCardsFavorite $usersFavorite): self
+    {
+        if ($this->UsersFavorite->contains($usersFavorite)) {
+            $this->UsersFavorite->removeElement($usersFavorite);
+            // set the owning side to null (unless already changed)
+            if ($usersFavorite->getBudgetCard() === $this) {
+                $usersFavorite->setBudgetCard(null);
             }
         }
 

@@ -65,9 +65,15 @@ class User implements UserInterface
      */
     private $amount;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\BudgetCardsFavorite", mappedBy="user")
+     */
+    private $favoriteBudgetCards;
+
     public function __construct()
     {
         $this->budgetCards = new ArrayCollection();
+        $this->favoriteBudgetCards = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -210,6 +216,37 @@ class User implements UserInterface
         // set the owning side of the relation if necessary
         if ($amount->getUser() !== $this) {
             $amount->setUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BudgetCardsFavorite[]
+     */
+    public function getFavoriteBudgetCards(): Collection
+    {
+        return $this->favoriteBudgetCards;
+    }
+
+    public function addFavoriteBudgetCard(BudgetCardsFavorite $favoriteBudgetCard): self
+    {
+        if (!$this->favoriteBudgetCards->contains($favoriteBudgetCard)) {
+            $this->favoriteBudgetCards[] = $favoriteBudgetCard;
+            $favoriteBudgetCard->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavoriteBudgetCard(BudgetCardsFavorite $favoriteBudgetCard): self
+    {
+        if ($this->favoriteBudgetCards->contains($favoriteBudgetCard)) {
+            $this->favoriteBudgetCards->removeElement($favoriteBudgetCard);
+            // set the owning side to null (unless already changed)
+            if ($favoriteBudgetCard->getUser() === $this) {
+                $favoriteBudgetCard->setUser(null);
+            }
         }
 
         return $this;
