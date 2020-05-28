@@ -16,7 +16,7 @@ class BudgetCard
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"budget-card-get-list", "deal-create"})
+     * @Groups({"budget-card-get-list", "deal-create", "favorite-budget-card-get-list"})
      */
     private $id;
 
@@ -62,7 +62,7 @@ class BudgetCard
     private $deals;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\BudgetCardsFavorite", mappedBy="budgetCard")
+     * @ORM\OneToMany(targetEntity="App\Entity\BudgetCardsFavorite", mappedBy="budgetCard", cascade={"remove"})
      */
     private $UsersFavorite;
 

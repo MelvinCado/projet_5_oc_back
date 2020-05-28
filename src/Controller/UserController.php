@@ -44,7 +44,7 @@ class UserController extends AbstractController
 
             if ($userfind instanceof User) {
                 return $this->json([
-                    'status' => 409,
+                    'code' => 409,
                     'message' => "Un compte est déja associé à cette email : $userEmail"
                 ], 409);
             }
@@ -65,7 +65,7 @@ class UserController extends AbstractController
             return $this->json($user, 201, [], ['groups' => 'user-get-list']);
         } catch (NotEncodableValueException $e) {
             return $this->json([
-                'status' => 400,
+                'code' => 400,
                 'message' => $e->getMessage()
             ], 400);
         }

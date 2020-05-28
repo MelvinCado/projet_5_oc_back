@@ -17,7 +17,7 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"budget-card-create"})
+     * @Groups({"budget-card-create", "favorite-budget-card-get-list"})
      */
     private $id;
 
@@ -66,7 +66,8 @@ class User implements UserInterface
     private $amount;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\BudgetCardsFavorite", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\BudgetCardsFavorite", mappedBy="user", orphanRemoval=true)
+     * @Groups({"favorite-budget-card-get-list"})
      */
     private $favoriteBudgetCards;
 

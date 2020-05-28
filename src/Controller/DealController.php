@@ -27,8 +27,8 @@ class DealController extends AbstractController
         $amountId = $req['amountId'];
         
         try {
-            $amount = $this->getDoctrine()->getRepository(Amount::class)->findBy(["id" => $amountId])[0];
-            $budgetCard = $this->getDoctrine()->getRepository(BudgetCard::class)->findBy(["id" => $budgetCardId])[0];
+            $amount = $this->getDoctrine()->getRepository(Amount::class)->findOneBy(["id" => $amountId]);
+            $budgetCard = $this->getDoctrine()->getRepository(BudgetCard::class)->findOneBy(["id" => $budgetCardId]);
             
             $newDeal = new Deal();
             $newDeal->setType($type);
@@ -52,7 +52,7 @@ class DealController extends AbstractController
             return $this->json($newDeal, 201, [], ["groups" => "deal-create"]);
         } catch (NotEncodableValueException $e) {
             return $this->json([
-                'status' => 400,
+                'code' => 400,
                 'message' => $e->getMessage()
             ], 400);
         }

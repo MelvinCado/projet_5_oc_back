@@ -18,7 +18,7 @@ class AmountController extends AbstractController
      */
     public function get_amount_by_user(int $userId)
     {
-        $user = $this->getDoctrine()->getRepository(User::class)->findBy(["id" => $userId])[0];
+        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(["id" => $userId]);
         return $this->json($user, 200, [], ['groups' => 'amount-get-one']);
     }
 
@@ -33,7 +33,7 @@ class AmountController extends AbstractController
         $type = $req['type'];
         
         try {
-            $user = $this->getDoctrine()->getRepository(User::class)->findBy(["id" => $userId])[0];
+            $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(["id" => $userId]);
             $amount = $user->getAmount();
 
             if ($type === Amount::ADD_MONEY) {
@@ -48,7 +48,7 @@ class AmountController extends AbstractController
             return $this->json([], 200);
         } catch (NotEncodableValueException $e) {
             return $this->json([
-                'status' => 400,
+                'code' => 400,
                 'message' => $e->getMessage()
             ], 400);
         }
