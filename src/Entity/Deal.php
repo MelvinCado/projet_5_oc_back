@@ -17,33 +17,47 @@ class Deal
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"deal-create"})
+     * @Groups({"deal-create", "deals-get-list"})
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\budgetCard", inversedBy="deals")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"deal-create"})
+     * @Groups({"deal-create","deals-get-list"})
      */
     private $budgetCard;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\amount", inversedBy="deals")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"deal-create"})
+     * @Groups({"deal-create", "deals-get-list"})
      */
     private $amount;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"deal-create", "deals-get-list"})
      */
     private $type;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"deal-create", "deals-get-list"})
      */
     private $money;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\user", inversedBy="deals")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @Groups({"deal-create", "deals-get-list"})
+     */
+    private $createdAt;
 
     public function getId(): ?int
     {
@@ -94,6 +108,30 @@ class Deal
     public function setMoney(int $money): self
     {
         $this->money = $money;
+
+        return $this;
+    }
+
+    public function getUser(): ?user
+    {
+        return $this->user;
+    }
+
+    public function setUser(?user $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

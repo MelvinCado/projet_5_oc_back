@@ -14,7 +14,6 @@ use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 
 class BudgetCardController extends AbstractController
 {
-
     /**
      * @Route("/api/budget-card-by-userId/{userId}", name="api_get_list_budget_card", methods={"GET"})
      */

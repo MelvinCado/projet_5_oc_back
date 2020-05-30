@@ -12,7 +12,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 class Amount
 {
-
     const ADD_MONEY = 0;
     const REMOVE_MONEY = 1;
 
@@ -20,7 +19,7 @@ class Amount
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"amount-get-one","deal-create"})
+     * @Groups({"amount-get-one","deal-create", "deals-get-list"})
      */
     private $id;
 

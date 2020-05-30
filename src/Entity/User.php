@@ -71,10 +71,16 @@ class User implements UserInterface
      */
     private $favoriteBudgetCards;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Deal", mappedBy="user", orphanRemoval=true)
+     */
+    private $deals;
+
     public function __construct()
     {
         $this->budgetCards = new ArrayCollection();
         $this->favoriteBudgetCards = new ArrayCollection();
+        $this->deals = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -247,6 +253,37 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($favoriteBudgetCard->getUser() === $this) {
                 $favoriteBudgetCard->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Deal[]
+     */
+    public function getDeals(): Collection
+    {
+        return $this->deals;
+    }
+
+    public function addDeal(Deal $deal): self
+    {
+        if (!$this->deals->contains($deal)) {
+            $this->deals[] = $deal;
+            $deal->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDeal(Deal $deal): self
+    {
+        if ($this->deals->contains($deal)) {
+            $this->deals->removeElement($deal);
+            // set the owning side to null (unless already changed)
+            if ($deal->getUser() === $this) {
+                $deal->setUser(null);
             }
         }
 

@@ -12,7 +12,6 @@ use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 
 class AmountController extends AbstractController
 {
-
     /**
      * @Route("/api/amount/by-user/{userId}", name="api_get_one_amount", methods={"GET"})
      */

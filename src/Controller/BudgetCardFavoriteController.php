@@ -13,7 +13,6 @@ use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 
 class BudgetCardFavoriteController extends AbstractController
 {
-
     /**
      * @Route("/api/favorite-budget-card/by-userId/{userId}", name="api_get_list_favorite_budget_card_by_user", methods={"GET"})
      */
@@ -27,9 +26,8 @@ class BudgetCardFavoriteController extends AbstractController
     /**
      * @Route("/api/favorite-budget-card/{id}", name="api_edit_favorite_budget_card", methods={"PATCH"})
      */
-    public function editFavriteBudgetCard(int $id, Request $request , EntityManagerInterface $emi)
+    public function editFavriteBudgetCard(int $id, Request $request, EntityManagerInterface $emi)
     {
-
         $req = json_decode($request->getContent(), true);
 
         $isFavorite = $req['isFavorite'];
@@ -78,7 +76,7 @@ class BudgetCardFavoriteController extends AbstractController
     //                 'code' => 409,
     //                 'message' => "Cette enveloppe est déja dans les favoris"
     //             ], 409);
-    //         }   
+    //         }
 
     //         $emi->persist($user);
     //         $emi->persist($budgetCard);

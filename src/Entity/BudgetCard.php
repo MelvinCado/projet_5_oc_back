@@ -16,31 +16,41 @@ class BudgetCard
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"budget-card-get-list", "deal-create", "favorite-budget-card-get-list"})
+     * @Groups({
+     *   "budget-card-get-list",
+     *   "deal-create",
+     *   "favorite-budget-card-get-list",
+     *   "favorite-budget-card-get-list",
+     *   "deals-get-list"
+     * })
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"budget-card-create", "budget-card-get-list","deal-create"})
+     * @Groups({"budget-card-create",
+     *   "budget-card-get-list",
+     *   "deal-create",
+     *   "favorite-budget-card-get-list",
+     *   "deals-get-list"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"budget-card-create", "budget-card-get-list","deal-create"})
+     * @Groups({"budget-card-create", "budget-card-get-list","deal-create", "favorite-budget-card-get-list"})
      */
     private $ceil;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"budget-card-create", "budget-card-get-list"})
+     * @Groups({"budget-card-create", "budget-card-get-list", "favorite-budget-card-get-list"})
      */
     private $limitDate;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"budget-card-create", "budget-card-get-list","deal-create"})
+     * @Groups({"budget-card-create", "budget-card-get-list","deal-create", "favorite-budget-card-get-list"})
      */
     private $currentMoney;
 
